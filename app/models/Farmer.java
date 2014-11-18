@@ -4,6 +4,7 @@ import play.db.ebean.Model;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by SCC-140 on 2014-11-18.
@@ -33,4 +34,11 @@ public class Farmer extends Model {
     public Cooperative cooperative;
 
     public static Finder<Long, Farmer> find = new Finder<Long, Farmer>(Long.class, Farmer.class);
+
+    public static List<Farmer> getFarmersInCooperative(Long cooperativeId) {
+        List<Farmer> farmerList = find.where()
+                            .eq("cooperative_id", cooperativeId).findList();
+        return farmerList;
+    }
+
 }
