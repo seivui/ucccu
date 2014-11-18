@@ -1,0 +1,37 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Default path will just redirect to the computer list
+GET         /                                          controllers.Application.index()
+GET         /login                                     controllers.Application.login()
+POST        /login                                     controllers.Application.authenticate()
+GET         /logout                                    controllers.Application.logout()
+
+# Union routes
+GET         /unions                                    @controllers.MUnionController.unionIndex
+GET         /addUnion                                  @controllers.MUnionController.addUnionIndex
+GET         /editUnion/get/:unionId                    @controllers.MUnionController.getUnion(unionId: Long)
+POST        /unions/add                                @controllers.MUnionController.addUnion()
+POST        /unions/edit/:unionId                      @controllers.MUnionController.editUnion(unionId: Long)
+POST        /unions/delete/:unionId                    @controllers.MUnionController.deleteUnion(unionId: Long)
+
+# Cooperative routes
+GET         /cooperatives                              @controllers.CooperativeController.cooperativeIndex
+GET         /addCooperative                            @controllers.CooperativeController.addCooperativeIndex
+GET         /editCooperative/get/:cooperativeId        @controllers.CooperativeController.getCooperative(cooperativeId: Long)
+POST        /cooperatives/add                          @controllers.CooperativeController.addCooperative()
+POST        /cooperatives/delete/:cooperativeId        @controllers.CooperativeController.deleteCooperative(cooperativeId: Long)
+POST        /cooperative/edit/:cooperativeId           @controllers.CooperativeController.editCooperative(cooperativeId: Long)
+
+# Farmers routes
+GET         /farmers                                   @controllers.FarmerController.farmerIndex
+GET         /addFarmer                                 @controllers.FarmerController.addFarmerIndex
+GET         /editFarmer/get/:farmerId                  @controllers.FarmerController.getFarmer(farmerId: Long)
+POST        /farmers/add                               @controllers.FarmerController.addFarmer()
+POST        /farmers/delete/:farmerId                  @controllers.FarmerController.deleteFarmer(farmerId: Long)
+POST        /farmers/edit/:farmerId                    @controllers.FarmerController.editFarmer(farmerId: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                              controllers.Assets.at(path="/public", file)
+

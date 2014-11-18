@@ -1,0 +1,64 @@
+@(cooperatives: List[Cooperative])
+
+@import helper._
+
+@main("Nikki Farmers Management System") {
+
+    <div class="container">
+
+        <form class="form" action="@routes.FarmerController.addFarmer()" method="post">
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputFirstName">First Name</label>
+
+                <input type="text" class="form-control" name="inputFirstName" placeholder="First Name">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputLastName">Last Name</label>
+
+                <input type="text" class="form-control" name="inputLastName" placeholder="Last Name">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputPhoneNumber">Phone Number</label>
+
+                <input type="number" class="form-control" name="inputPhoneNumber" placeholder="Phone Number">
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputAccount">Account</label>
+
+                <input type="number" class="form-control" name="inputAccount" placeholder="Account Number">
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputSex">Sex</label>
+
+                <input type="text" class="form-control" name="inputSex" placeholder="Sex">
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputCooperative">Cooperative</label>
+
+                <select class="form-control" name="inputCooperative">
+                @for(cooperative <- cooperatives) {
+                    <option value="@cooperative.cooperativeId">@cooperative.cooperativeName</option>
+                }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        </form>
+    </div>
+}

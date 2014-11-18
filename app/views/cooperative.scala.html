@@ -1,0 +1,69 @@
+@(cooperatives: List[Cooperative], unions: List[MUnion])
+
+
+@import helper._
+
+@main("Nikki Farmers Management System") {
+
+    @form(routes.CooperativeController.addCooperativeIndex()) {
+        <button type="submit" class="btn btn-primary">Add Cooperative</button>
+    }
+
+    <table id="cooperativeTable" class="table table-striped">
+
+        <thead>
+
+            <tr data-row-key="1">
+
+                <th data-field="id">Cooperative Id</th>
+
+                <th>Cooperative Name</th>
+
+                <th>Contact Person</th>
+
+                <th>Phone Number</th>
+
+                <th>Email</th>
+
+                <th>Union</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+        @for(cooperative <- cooperatives) {
+            <tr>
+
+                <td>@cooperative.cooperativeId</td>
+
+                <td>@cooperative.cooperativeName</td>
+
+                <td>@cooperative.contactPerson</td>
+
+                <td>@cooperative.phoneNumber</td>
+
+                <td>@cooperative.email</td>
+
+                <td>@cooperative.union.unionName</td>
+
+                <td>@form(routes.CooperativeController.getCooperative(cooperative.cooperativeId)) {
+                    <button type="submit" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                }</td>
+
+                <td>@form(routes.CooperativeController.deleteCooperative(cooperative.cooperativeId)) {
+                    <button type="submit" class="btn btn-danger ">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                }
+                </td>
+
+            </tr>
+        }
+        </tbody>
+
+    </table>
+
+}

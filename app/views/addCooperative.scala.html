@@ -1,0 +1,56 @@
+@(unions: List[MUnion])
+@import helper._
+
+@main("Nikki Farmers management System") {
+
+    <div class="container">
+
+        <form class="form" action="@routes.CooperativeController.addCooperative()" method="post">
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputCooperativeName">Union Name</label>
+
+                <input type="text" class="form-control" name="inputCooperativeName" placeholder="Cooperative Name">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputContactPerson">Contact Person</label>
+
+                <input type="text" class="form-control" name="inputContactPerson" placeholder="Contact Person">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputPhoneNumber">Phone Number</label>
+
+                <input type="text" class="form-control" name="inputPhoneNumber" placeholder="Phone Number">
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputEmail">Email</label>
+
+                <input type="email" class="form-control" name="inputEmail" placeholder="Email">
+            </div>
+
+            <div class="form-group">
+
+                <label class="sr-only" for="inputUnion">Union</label>
+
+                <select class="form-control" name="inputUnion">
+                @for(union <- unions) {
+                    <option value="@union.unionId">@union.unionName</option>
+                }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        </form>
+
+    </div>
+}

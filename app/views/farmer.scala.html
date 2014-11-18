@@ -1,0 +1,75 @@
+@(farmers: List[Farmer], cooperatives: List[Cooperative])
+
+
+@import helper._
+
+@main("Nikki Farmers Management System") {
+
+    @form(routes.FarmerController.addFarmerIndex()) {
+        <button type="submit" class="btn btn-primary">Add Farmer</button>
+    }
+
+    <table id="farmerTable" class="table table-responsive table-striped">
+
+        <thead>
+
+            <tr data-row-key="1">
+
+                <th data-field="id">Farmer Id</th>
+
+                <th>First Name</th>
+
+                <th>Last Name</th>
+
+                <th>Phone Number</th>
+
+                <th>Account Number</th>
+
+                <th>Sex</th>
+
+                <th>Cooperative</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+        @for(farmer <- farmers) {
+            <tr>
+
+                <td>@farmer.farmerId</td>
+
+                <td>@farmer.firstName</td>
+
+                <td>@farmer.lastName</td>
+
+                <td>@farmer.phoneNumber</td>
+
+                <td>@farmer.accountNumber</td>
+
+                <td>@farmer.sex</td>
+
+                <td>@farmer.cooperative.cooperativeName</td>
+
+                <td>@form(routes.FarmerController.getFarmer(farmer.farmerId)) {
+                    <button type="submit" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                }</td>
+
+                <td>@form(routes.FarmerController.deleteFarmer(farmer.farmerId)) {
+                    <button type="submit" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                }
+
+                </td>
+
+
+            </tr>
+        }
+        </tbody>
+
+
+    </table>
+}

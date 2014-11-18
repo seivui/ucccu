@@ -1,0 +1,74 @@
+@(unions: List[MUnion])
+
+@import helper._
+
+@main("Farmer Management System") {
+
+    @form(routes.MUnionController.addUnionIndex()) {
+        <button type="submit" class="btn btn-primary">Add Union</button>
+    }
+
+    <table id="unionTable" class="table table-responsive table-striped">
+
+        <thead>
+
+            <tr data-row-key="1">
+
+                <th data-field="id">Union Id</th>
+
+                <th>Union Name</th>
+
+                <th>Contact Person</th>
+
+                <th>Phone Number</th>
+
+                <th>Email</th>
+
+                <th>District</th>
+
+                <th>Address</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+        @for(union <- unions) {
+            <tr>
+
+                <td>@union.unionId</td>
+
+                <td>@union.unionName</td>
+
+                <td>@union.contactPerson</td>
+
+                <td>@union.phoneNumber</td>
+
+                <td>@union.email</td>
+
+                <td>@union.district</td>
+
+                <td>@union.address</td>
+
+                <td>@form(routes.MUnionController.getUnion(union.unionId)) {
+                    <button type="submit" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                }
+                </td>
+
+                <td>@form(routes.MUnionController.deleteUnion(union.unionId)) {
+                    <button type="submit" class="btn btn-danger ">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                }
+                </td>
+
+            </tr>
+        }
+        </tbody>
+
+
+    </table>
+
+}
