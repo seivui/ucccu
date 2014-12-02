@@ -3,11 +3,13 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import models.Cooperative;
 import models.Farmer;
+import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.ebean.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.addFarmer;
 import views.html.editFarmer;
 import views.html.farmer;
@@ -19,6 +21,8 @@ import static play.data.Form.form;
 /**
  * Created by SCC-140 on 2014-11-18.
  */
+
+@Security.Authenticated(Secured.class)
 public class FarmerController extends Controller {
 
     @Transactional
@@ -26,33 +30,18 @@ public class FarmerController extends Controller {
         //Get list of all farmers
         List<Farmer> farmerList = Farmer.find.all();
         List<Cooperative> cooperativeList = Cooperative.find.all();
-        /*
-        for (Farmer farmer : farmerRepository.findAll()) {
-            farmerList.add(farmer);
-        }
+        User user = User.find.byId(request().username());
 
-        //Get list of all cooperatives
-        List<Cooperative> cooperativeList = new ArrayList<Cooperative>();
-        for (Cooperative cooperative : cooperativeRepository.findAll()) {
-            cooperativeList.add(cooperative);
-        }
-        */
-
-        return ok(farmer.render(farmerList, cooperativeList));
+        return ok(farmer.render(farmerList, cooperativeList, user));
     }
 
     @Transactional
     public Result addFarmerIndex() {
         //Get list of all cooperatives
         List<Cooperative> cooperativeList = Cooperative.find.all();
+        User user = User.find.byId(request().username());
 
-        /*
-        for (Cooperative cooperative : cooperativeRepository.findAll()) {
-            cooperativeList.add(cooperative);
-        }
-        */
-
-        return ok(addFarmer.render(cooperativeList));
+        return ok(addFarmer.render(cooperativeList, user));
     }
 
     @Transactional
@@ -67,6 +56,7 @@ public class FarmerController extends Controller {
         farmer.phoneNumber = requestData.get("inputPhoneNumber");
         farmer.accountNumber = Integer.parseInt(requestData.get("inputAccount"));
         farmer.sex = requestData.get("inputSex");
+        farmer.amountCows = Integer.parseInt(requestData.get("inputCows"));
 
         //Get cooperative that farmer will belong to
         Long cooperativeId = Long.valueOf(requestData.get("inputCooperative"));
@@ -97,14 +87,9 @@ public class FarmerController extends Controller {
         farmer = Farmer.find.byId(farmerId);
 
         List<Cooperative> cooperativeList = Cooperative.find.all();
+        User user = User.find.byId(request().username());
 
-        /*
-        for (Cooperative cooperative : cooperativeRepository.findAll()) {
-            cooperativeList.add(cooperative);
-        }
-        */
-
-        return ok(editFarmer.render(farmer, cooperativeList));
+        return ok(editFarmer.render(farmer, cooperativeList, user));
     }
 
     @Transactional
@@ -121,6 +106,7 @@ public class FarmerController extends Controller {
         farmer.phoneNumber = requestData.get("inputPhoneNumber");
         farmer.accountNumber = Integer.parseInt(requestData.get("inputAccount"));
         farmer.sex = requestData.get("inputSex");
+        farmer.amountCows = Integer.parseInt(requestData.get("inputCows"));
 
         //Find cooperative to add to farmer
         Long cid = Long.valueOf(requestData.get("inputCooperative"));

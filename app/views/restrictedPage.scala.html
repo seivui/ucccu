@@ -1,0 +1,21 @@
+
+@import helper._
+
+@main("Restricted page"){
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+            @helper.form(routes.Application.login()) {
+
+                <h1>You do not have permission to view this page.</h1>
+
+                <p>
+                    <button class="btn btn-primary" type="submit">Go to login page</button>
+                </p>
+            }
+            </div>
+        </div>
+    </div>
+}

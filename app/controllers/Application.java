@@ -8,6 +8,9 @@ import views.html.*;
 
 import models.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Manage a database of computers
  */
@@ -15,7 +18,26 @@ public class Application extends Controller {
     
     @Security.Authenticated(Secured.class)
     public static Result index() {
-        return ok(index.render());
+
+        User user = User.find.byId(request().username());
+        Cooperative cooperative;
+        List<Farmer> farmerList;
+        List<MilkTransaction> milkTransactionList = MilkTransaction.find.all();
+        if (Cooperative.findCooperativeByEmail(user.email) != null) {
+            cooperative = Cooperative.findCooperativeByEmail(user.email);
+        }
+        else {
+            cooperative = new Cooperative();
+        }
+
+        if (Farmer.getFarmersInCooperative(cooperative.cooperativeId) != null) {
+            farmerList = Farmer.getFarmersInCooperative(cooperative.cooperativeId);
+        }
+        else {
+            farmerList = new ArrayList<Farmer>();
+        }
+
+        return ok(index.render(user, milkTransactionList));
     }
 
     public static Result login() {

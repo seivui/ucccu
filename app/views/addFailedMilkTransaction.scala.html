@@ -1,10 +1,8 @@
-@(cooperatives: List[Cooperative], unions: List[MUnion], user: User)
-
+@(farmers: List[Farmer], user: User)
 
 @import helper._
 
-@main("Nikki Farmers Management System") {
-
+@main("Nikki Farmer Management System") {
     <header>
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
@@ -27,9 +25,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="@routes.Application.logout()">Logout</a></li>
                     </ul>
-
                 </div>
-
             </div>
         </nav>
     </header>
@@ -51,67 +47,55 @@
 
             </div>
 
-    <div class="container col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="container col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-    <table id="cooperativeTable" class="table table-striped">
+        <form class="form" action="@routes.MilkTransactionController.addFailedMilkTransaction()" method="post">
 
-        <thead>
+            <div class="form-group">
 
-            <tr data-row-key="1">
-
-                <th data-field="id">Cooperative Id</th>
-
-                <th>Cooperative Name</th>
-
-                <th>Contact Person</th>
-
-                <th>Phone Number</th>
-
-                <th>Email</th>
-
-                <th>Union</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-        @for(cooperative <- cooperatives) {
-            <tr>
-
-                <td>@cooperative.cooperativeId</td>
-
-                <td>@cooperative.cooperativeName</td>
-
-                <td>@cooperative.contactPerson</td>
-
-                <td>@cooperative.phoneNumber</td>
-
-                <td>@cooperative.email</td>
-
-                <td>@cooperative.union.unionName</td>
-
-                <td>@form(routes.CooperativeController.getCooperative(cooperative.cooperativeId)) {
-                    <button type="submit" class="btn btn-warning">
-                        <span class="glyphicon glyphicon-edit"></span>
-                    </button>
-                }</td>
-
-                <td>@form(routes.CooperativeController.deleteCooperative(cooperative.cooperativeId)) {
-                    <button type="submit" class="btn btn-danger ">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </button>
+                <label class="sr-only" for="inputFarmer">Farmer Name</label>
+                <select class="form-control" name="inputFarmer" >
+                @for(farmer <- farmers) {
+                    <option value="@farmer.farmerId">@farmer.firstName @farmer.lastName</option>
                 }
-                </td>
+                </select>
 
-            </tr>
-        }
-        </tbody>
+            </div>
 
-    </table>
+            <div class="form-group">
 
+                <label class="sr-only" for="inputReason">Reason</label>
+                <input type="text" class="form-control" name="inputReason" placeholder="Reason for rejection">
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="dtp_input1" class="sr-only">DateTime Picking</label>
+                <div class="input-group date form_datetime col-md-5" data-date="" data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_input1">
+                    <input class="form-control" size="16" type="text" name="inputDateTime" placeholder="Date and Time" value="" readonly>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                </div>
+
+            </div>
+
+            <script>
+                $('.form_datetime').datetimepicker({
+                //language:  'fr',
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1
+                });
+            </script>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        </form>
     </div>
     </div>
     </div>
-
 }

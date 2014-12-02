@@ -40,10 +40,16 @@ public class Cooperative extends Model {
         return cooperative;
     }
 
-    public List<Cooperative> getCooperativesInUnion(Long unionId) {
+    public static List<Cooperative> getCooperativesInUnion(Long unionId) {
         List<Cooperative> cooperativeList = find.where()
                                     .eq("union_id", unionId).findList();
 
         return cooperativeList;
+    }
+
+    public static Cooperative findCooperativeByEmail(String email) {
+        Cooperative cooperative = find.where()
+                            .eq("email", email).findUnique();
+        return cooperative;
     }
 }

@@ -3,14 +3,14 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import models.Cooperative;
 import models.MUnion;
+import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.ebean.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.addCooperative;
-import views.html.cooperative;
-import views.html.editCooperative;
+import play.mvc.Security;
+import views.html.*;
 
 import java.util.List;
 
@@ -22,40 +22,40 @@ import static play.data.Form.form;
 public class CooperativeController extends Controller {
 
     @Transactional
+    @Security.Authenticated(Secured.class)
     public Result cooperativeIndex() {
         //Get list of all cooperatives
         List<Cooperative> cooperativeList = models.Cooperative.find.all();
         List<MUnion> unionList = MUnion.find.all();
-        /*
-        for (Cooperative cooperative : cooperativeRepository.findAll()) {
-            cooperativeList.add(cooperative);
-        }
 
-        //Get list of all unions
-        List<MUnion> unionList = new ArrayList<MUnion>();
-        for (MUnion u : unionRepository.findAll()) {
-            unionList.add(u);
-        }
-        */
+        User user = User.find.byId(request().username());
 
-        return ok(cooperative.render(cooperativeList, unionList));
+        if (user.role.equals("cooperative") || user.role.equals("union")) {
+            return ok(cooperative.render(cooperativeList, unionList, user));
+        }
+        else {
+            return ok(restrictedPage.render());
+        }
     }
 
     @Transactional
+    @Security.Authenticated(Secured.class)
     public Result addCooperativeIndex() {
         //Get list of all unions
         List<MUnion> unionList = MUnion.find.all();
 
-        /*
-        for (MUnion union : unionRepository.findAll()) {
-            unionList.add(union);
-        }
-        */
+        User user = User.find.byId(request().username());
 
-        return ok(addCooperative.render(unionList));
+        if (user.role.equals("cooperative") || user.role.equals("union")) {
+            return ok(addCooperative.render(unionList, user));
+        }
+        else {
+            return ok(restrictedPage.render());
+        }
     }
 
     @Transactional
+    @Security.Authenticated(Secured.class)
     public Result addCooperative() {
 
         Cooperative cooperative = new Cooperative();
@@ -81,6 +81,7 @@ public class CooperativeController extends Controller {
     }
 
     @Transactional
+    @Security.Authenticated(Secured.class)
     public Result deleteCooperative(Long cooperativeId) {
         Cooperative cooperative;
         cooperative = Cooperative.find.byId(cooperativeId);
@@ -92,22 +93,25 @@ public class CooperativeController extends Controller {
     }
 
     @Transactional
+    @Security.Authenticated(Secured.class)
     public Result getCooperative(Long cooperativeId) {
         Cooperative cooperative;
         cooperative = Cooperative.find.byId(cooperativeId);
+        User user = User.find.byId(request().username());
 
         //Get list of all unions
         List<MUnion> unionList = MUnion.find.all();
-        /*
-        for (MUnion u : unionRepository.findAll()) {
-            unionList.add(u);
-        }
-        */
 
-        return ok(editCooperative.render(cooperative, unionList));
+        if (user.role.equals("cooperative") || user.role.equals("union")){
+            return ok(editCooperative.render(cooperative, unionList, user));
+        }
+        else {
+            return ok(restrictedPage.render());
+        }
     }
 
     @Transactional
+    @Security.Authenticated(Secured.class)
     public Result editCooperative(Long cooperativeId) {
         DynamicForm requestData = form().bindFromRequest();
 

@@ -29,6 +29,8 @@ public class Farmer extends Model {
 
     public String phoneNumber;
 
+    public int amountCows;
+
     @ManyToOne
     @JoinColumn(name="cooperative_id")
     public Cooperative cooperative;
@@ -40,5 +42,6 @@ public class Farmer extends Model {
                             .eq("cooperative_id", cooperativeId).findList();
         return farmerList;
     }
+
 
 }

@@ -2,13 +2,13 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import models.MUnion;
+import models.User;
 import play.data.DynamicForm;
 import play.db.ebean.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.addUnion;
-import views.html.editUnion;
-import views.html.union;
+import play.mvc.Security;
+import views.html.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,28 +18,47 @@ import static play.data.Form.form;
 /**
  * Created by SCC-140 on 2014-11-18.
  */
+
+@Security.Authenticated(Secured.class)
 public class MUnionController extends Controller {
 
     @Transactional
     public Result unionIndex() {
-
         List<MUnion> unionList = MUnion.find.all();
 
-        return ok(union.render(unionList));
+        User user = User.find.byId(request().username());
+
+        if (!user.role.equals("union")) {
+            return ok(restrictedPage.render());
+        }
+        else {
+            return ok(union.render(unionList, user));
+        }
     }
 
     @Transactional
     public Result addUnionIndex() {
-        return ok(addUnion.render());
+        User user = User.find.byId(request().username());
+
+        if (!user.role.equals("union")) {
+            return ok(restrictedPage.render());
+        }
+        else {
+            return ok(addUnion.render(user));
+        }
     }
 
     @Transactional
     public Result getUnion(Long unionId) {
         MUnion union = MUnion.find.byId(unionId);
+        User user = User.find.byId(request().username());
 
-        //union = mUnionRepository.findOne(unionId);
-
-        return ok(editUnion.render(union));
+        if (!user.role.equals("union")) {
+            return ok(restrictedPage.render());
+        }
+        else {
+            return ok(editUnion.render(union, user));
+        }
     }
 
     @Transactional

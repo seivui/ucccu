@@ -33,4 +33,10 @@ public class MUnion extends Model {
     public String email;
 
     public static Finder<Long, MUnion> find = new Finder<Long, MUnion>(Long.class, MUnion.class);
+
+    public static MUnion findUnionByEmail(String email) {
+        MUnion union = find.where()
+                .eq("email", email).findUnique();
+        return union;
+    }
 }

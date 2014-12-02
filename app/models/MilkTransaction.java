@@ -2,10 +2,14 @@ package models;
 
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,5 +70,22 @@ public class MilkTransaction extends Model {
                                     .between("date", start, end)
                                     .findList();
         return transactionList;
+    }
+
+    public static List<MilkTransaction> periodAlltransactions(DateTime start, DateTime end) {
+        List<MilkTransaction> milkTransactionList = find.where()
+                                        .between("date", start, end)
+                                        .findList();
+
+        return milkTransactionList;
+    }
+
+    public static List<MilkTransaction> todayAllDelivery() {
+        List<MilkTransaction> milkTransactionList;
+        DateTime dateTime = DateTime.now();
+
+        milkTransactionList = find.where()
+                                .eq("date", dateTime).findList();
+        return milkTransactionList;
     }
 }

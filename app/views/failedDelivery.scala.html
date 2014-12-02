@@ -1,10 +1,9 @@
-@(cooperatives: List[Cooperative], unions: List[MUnion], user: User)
-
+@(user: User, failedDeliveries: List[FailedMilkTransaction])
 
 @import helper._
+@import org.joda.time.format.DateTimeFormat
 
 @main("Nikki Farmers Management System") {
-
     <header>
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
@@ -51,67 +50,58 @@
 
             </div>
 
-    <div class="container col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="container col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-    <table id="cooperativeTable" class="table table-striped">
+                <table id="farmerTable" class="table table-responsive table-striped">
 
-        <thead>
+                    <thead>
 
-            <tr data-row-key="1">
+                        <tr data-row-key="1">
 
-                <th data-field="id">Cooperative Id</th>
+                            <th data-field="id">Delivery Id</th>
 
-                <th>Cooperative Name</th>
+                            <th>Reason</th>
 
-                <th>Contact Person</th>
+                            <th>Farmer</th>
 
-                <th>Phone Number</th>
+                            <th>Cooperative</th>
 
-                <th>Email</th>
+                        </tr>
 
-                <th>Union</th>
+                    </thead>
 
-            </tr>
+                    <tbody>
 
-        </thead>
+                    @defining(DateTimeFormat.forPattern("yyy-MM-dd HH:mm")) { dateFormatter =>
+                    @for(delivery <- failedDeliveries) {
+                        <tr>
 
-        <tbody>
-        @for(cooperative <- cooperatives) {
-            <tr>
+                            <td>@delivery.transactionId</td>
 
-                <td>@cooperative.cooperativeId</td>
+                            <td>@delivery.farmer.firstName @delivery.farmer.lastName</td>
 
-                <td>@cooperative.cooperativeName</td>
+                            <td>@delivery.cooperative.cooperativeName</td>
 
-                <td>@cooperative.contactPerson</td>
+                            <td>@delivery.reason</td>
 
-                <td>@cooperative.phoneNumber</td>
+                            <td>@dateFormatter.print(delivery.date)</td>
 
-                <td>@cooperative.email</td>
+                            <!-- Fixa detta
 
-                <td>@cooperative.union.unionName</td>
+                            -->
 
-                <td>@form(routes.CooperativeController.getCooperative(cooperative.cooperativeId)) {
-                    <button type="submit" class="btn btn-warning">
-                        <span class="glyphicon glyphicon-edit"></span>
-                    </button>
-                }</td>
+                            <td>@form(routes.MilkTransactionController.deleteFailedMilkTransaction(delivery.transactionId)) {
+                                <button type="submit" class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            }
+                        </tr>
+                    }
+                    }
+                    </tbody>
+                </table>
 
-                <td>@form(routes.CooperativeController.deleteCooperative(cooperative.cooperativeId)) {
-                    <button type="submit" class="btn btn-danger ">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                }
-                </td>
-
-            </tr>
-        }
-        </tbody>
-
-    </table>
-
+            </div>
+        </div>
     </div>
-    </div>
-    </div>
-
 }

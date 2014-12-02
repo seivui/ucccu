@@ -1,10 +1,56 @@
-@(farmer: Farmer, cooperatives: List[Cooperative])
+@(farmer: Farmer, cooperatives: List[Cooperative], user: User)
 
 @import helper._
 
 @main("Nikki Farmers Management System") {
 
-    <div class="container">
+    <header>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Nikki Farmers Management</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        @if(user.role == "union") {
+                            <li><a href="/unions">Unions</a></li>
+                            <li><a href="/cooperatives">Cooperatives</a></li>
+                            <li><a href="/farmers">Farmers</a></li>
+                        }
+                        @if(user.role == "cooperative") {
+                            <li><a href="/cooperatives">Cooperatives</a></li>
+                            <li><a href="/farmers">Farmers</a></li>
+                        }
+
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="@routes.Application.logout()">Logout</a></li>
+                    </ul>
+
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li><a href="/">Overview <span class="sr-only">(current)</span></a></li>
+                    <li><a href="/addMilktransaction">Milk Delivery</a></li>
+                    <li><a href="/addFailedMilktransaction">Rejected Milk delivery</a></li>
+                </ul>
+
+                <ul class="nav nav-sidebar">
+                    <li><a href="@routes.MUnionController.addUnionIndex()">Add Union</a></li>
+                    <li><a href="@routes.CooperativeController.addCooperativeIndex()">Add Cooperative</a></li>
+                    <li><a href="@routes.FarmerController.addFarmerIndex()">Add Farmer</a></li>
+                </ul>
+
+            </div>
+
+            <div class="container col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
     <form class="form" action="@routes.FarmerController.editFarmer(farmer.farmerId)" method="post">
 
@@ -45,6 +91,12 @@
             <input type="text" class="form-control" name="inputSex" value="@farmer.sex" placeholder="Sex">
         </div>
 
+        <div class="form-group">
+
+            <label class="sr-only" for="inputCows">Number of livestock</label>
+
+            <input type="number" class="form-control" name="inputCows" value="@farmer.amountCows" placeholder="Number of cattle">
+        </div>
 
         <div class="form-group">
 
@@ -60,5 +112,7 @@
         <button type="submit" class="btn btn-primary">Save</button>
 
     </form>
+    </div>
+    </div>
     </div>
 }

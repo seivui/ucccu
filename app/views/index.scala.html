@@ -1,8 +1,152 @@
+@(user: User, milkTransactions: List[MilkTransaction])
+
+@import play.api.libs.json.Json
 @import java.util
 @import helper._
+@import org.joda.time.format.DateTimeFormat
 
 @main("Nikki Farmers Management System") {
 
+    <header>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Nikki Farmers Management</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        @if(user.role == "union") {
+                            <li><a href="/unions">Unions</a></li>
+                            <li><a href="/cooperatives">Cooperatives</a></li>
+                            <li><a href="/farmers">Farmers</a></li>
+                        }
+                        @if(user.role == "cooperative") {
+                            <li><a href="/cooperatives">Cooperatives</a></li>
+                            <li><a href="/farmers">Farmers</a></li>
+                        }
 
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="@routes.Application.logout()">Logout</a></li>
+                    </ul>
 
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li><a href="/">Overview <span class="sr-only">(current)</span></a></li>
+                    <li><a href="/addMilktransaction">Milk Delivery</a></li>
+                    <li><a href="/addFailedMilktransaction">Rejected Milk delivery</a></li>
+                </ul>
+
+                <ul class="nav nav-sidebar">
+                    <li><a href="@routes.MUnionController.addUnionIndex()">Add Union</a></li>
+                    <li><a href="@routes.CooperativeController.addCooperativeIndex()">Add Cooperative</a></li>
+                    <li><a href="@routes.FarmerController.addFarmerIndex()">Add Farmer</a></li>
+                </ul>
+
+            </div>
+
+            <div class="container col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+                <div class="page-header">
+
+                    <h1>Dashboard</h1>
+
+                    <form class="form-horizontal" action="@routes.MilkTransactionController.periodMilkTransactions()" method="post">
+                        <div class="control-group inline input-group date form_datetime col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1">
+                            <input class="form-control" size="16" type="text" name="inputStartDateTime" placeholder="Start Date" value="" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <div class="control-group inline input-group date form_datetime col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1">
+                            <input class="form-control" size="16" type="text" name="inputEndDateTime" placeholder="End Date" value="" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                            <button type="submit" class="btn btn-primary">Show period</button>
+                    </form>
+
+                    <script>
+                        $('.form_datetime').datetimepicker({
+                        //language:  'fr',
+                        weekStart: 1,
+                        todayBtn:  1,
+                        autoclose: 1,
+                        todayHighlight: 1,
+                        startView: 2,
+                        forceParse: 0,
+                        showMeridian: 1,
+                        pickTime: false
+                        });
+                    </script>
+
+                </div>
+
+                <div class="row placeholders">
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                </div>
+
+                <h2 class="sub-header">Milk Collected in period</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Farmer Name</th>
+                                <th>Milk Collected (L)</th>
+                                <th>Fat content (%)</th>
+                                <th>Water content (%)</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        @defining(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")) { dateFormatter =>
+                            @for(transaction <- milkTransactions) {
+                                <tr>
+                                    <td>@transaction.farmer.firstName @transaction.farmer.lastName</td>
+
+                                    <td>@transaction.amount</td>
+
+                                    <td>@transaction.fatContent</td>
+
+                                    <td>@transaction.waterContent</td>
+
+                                    <td>@dateFormatter.print(transaction.date)</td>
+
+                                    <td>@form(routes.MilkTransactionController.getMilkTransaction(transaction.transactionId)) {
+                                        <button type="submit" class="btn btn-warning">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </button>
+                                    }</td>
+
+                                </tr>
+                            }
+                        }
+                        </tbody>
+                    </table>
+                </div>
+    </div>
+    </div>
+    </div>
 }

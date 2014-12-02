@@ -32,6 +32,25 @@ POST        /farmers/add                               @controllers.FarmerContro
 POST        /farmers/delete/:farmerId                  @controllers.FarmerController.deleteFarmer(farmerId: Long)
 POST        /farmers/edit/:farmerId                    @controllers.FarmerController.editFarmer(farmerId: Long)
 
+# Milk transaction routes
+GET         /addMilktransaction                        @controllers.MilkTransactionController.addMilkTransactionIndex
+GET         /milktransaction                           @controllers.MilkTransactionController.milkTransactionIndex
+POST        /milktransaction/add                       @controllers.MilkTransactionController.addMilkTransaction()
+GET         /milkTransaction/get/:transactionId       @controllers.MilkTransactionController.getMilkTransaction(transactionId: Long)
+POST        /milkTransaction/edit/:transactionId       @controllers.MilkTransactionController.editMilkTransaction(transactionId: Long)
+POST         /milktransactions                          @controllers.MilkTransactionController.periodMilkTransactions()
+
+
+# Failed Milk transaction routes
+GET         /addFailedMilktransaction                  @controllers.MilkTransactionController.addFailedMilkTransactionIndex
+POST        /failedmilktransaction/add                 @controllers.MilkTransactionController.addFailedMilkTransaction()
+GET         /failedmilktransaction/get/:transactionId  @controllers.MilkTransactionController.getFailedMilkTransaction(transactionId: Long)
+POST        /failedmilktransaction/edit/:transactionId @controllers.MilkTransactionController.editFailedMilkTransaction(transactionId: Long)
+POST        /failedmilktransaction/delete/:transactionId    @controllers.MilkTransactionController.deleteFailedMilkTransaction(transactionId: Long)
+GET         /rejecteddeliveries                        @controllers.MilkTransactionController.getAllRejectedMilkToday()
+# Charts data routes
+GET         /chartsdata/json                           @controllers.MilkTransactionController.jsonMilkTransactionList()
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                              controllers.Assets.at(path="/public", file)
 
